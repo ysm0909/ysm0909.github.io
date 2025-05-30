@@ -55,6 +55,10 @@ plainwhite:
 # Build settings
 theme: plainwhite
 
+# url
+url: "https://ysm0909.github.io"
+baseurl: ""
+
 plugins:
   - jekyll-seo-tag
 #  - jekyll-feed
