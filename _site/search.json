@@ -1,15 +1,15 @@
 [
   
     {
-      "title"    : "Integrating razorpay into your webapp",
-      "title-lower"    : "integrating razorpay into your webapp",
+      "title"    : "A Gentle Introduction to 8-bit Matrix Multiplication for transformers at scale using Hugging Face Transformers, Accelerate and bitsandbytes",
+      "title-lower"    : "a gentle introduction to 8-bit matrix multiplication for transformers at scale using hugging face transformers, accelerate and bitsandbytes",
       "sub-titile" : "",
       "sub-titile-lower" : "",
-      "categories" : "JavascriptNodeJS",
+      "categories" : "HuggingFace",
       "tags"     : "",
-      "url"      : "/javascript/nodejs/2019/03/24/welcome-to-jekyll.html",
-      "date"     : "2019-03-24 00:33:36 +0900",
-      "content"     : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ..."
+      "url"      : "/huggingface/2025/06/04/8-bit-Matrix-Multiplication.html",
+      "date"     : "2025-06-04 15:28:36 +0900",
+      "content"     : "reference: Hugging Face LinkIntroductionMuch larger models, like PaLM would require even more resources.e.g. BLOOM-176B → 8x 80GB A100 GPUsSo, we need to find ways to reduce these requirements whil..."
     } 
   
 ]

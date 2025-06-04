@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,700" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<title>A Gentle Introduction to 8-bit Matrix Multiplication for transformers at scale using Hugging Face Transformers, Accelerate and bitsandbytes</title>
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>A Gentle Introduction to 8-bit Matrix Multiplication for transformers at scale using Hugging Face Transformers, Accelerate and bitsandbytes | Your awesome title</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="A Gentle Introduction to 8-bit Matrix Multiplication for transformers at scale using Hugging Face Transformers, Accelerate and bitsandbytes" />
+<meta name="author" content="GitHub User" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="reference: Hugging Face Link" />
+<meta property="og:description" content="reference: Hugging Face Link" />
+<link rel="canonical" href="http://localhost:4000/huggingface/2025/06/04/8-bit-Matrix-Multiplication.html" />
+<meta property="og:url" content="http://localhost:4000/huggingface/2025/06/04/8-bit-Matrix-Multiplication.html" />
+<meta property="og:site_name" content="Your awesome title" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-06-04T15:28:36+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="A Gentle Introduction to 8-bit Matrix Multiplication for transformers at scale using Hugging Face Transformers, Accelerate and bitsandbytes" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"GitHub User"},"dateModified":"2025-06-04T15:28:36+09:00","datePublished":"2025-06-04T15:28:36+09:00","description":"reference: Hugging Face Link","headline":"A Gentle Introduction to 8-bit Matrix Multiplication for transformers at scale using Hugging Face Transformers, Accelerate and bitsandbytes","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/huggingface/2025/06/04/8-bit-Matrix-Multiplication.html"},"url":"http://localhost:4000/huggingface/2025/06/04/8-bit-Matrix-Multiplication.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<script type="text/javascript" src="/assets/js/darkmode.js"></script>
+
+</head><body>
+  <main class="container">
+    <section class="about">
+      <div class="about-header condensed">
+      <div class="about-title">
+      <a href="/">
+        
+        <img src="/assets/du.jpg" alt="Seungmi Yu" />
+        
+      </a>
+      <h2 id="title">
+        <a href="/">Seungmi Yu</a>
+      </h2>
+      </div><p class="tagline">Student</p></div>
+      
+      <ul class="social about-footer condensed"><a href="https://github.com/ysm0909" target="_blank">
+          <li>
+            <i class="icon-github-circled"></i>
+          </li>
+        </a><a href="mailto:ysmm0909@naver.com" target="_blank">
+          <li>
+            <i class="icon-mail-alt"></i>
+          </li>
+        </a></ul><p class="about-footer condensed">&copy;
+        2025</p><div class="about-footer condensed">
+        <p>Dark Mode
+          <i class="icon-moon"></i>
+          <label class="switch">
+            <input type="checkbox" class="dark-mode-toggle">
+            <span class="slider round" onclick="toggleDarkMode()"></span>
+          </label>
+        </p>
+      </div>
+    </section>
+    <section class="content">
+      <div class="post-container">
+  <a class="post-link" href="/huggingface/2025/06/04/8-bit-Matrix-Multiplication.html">
+    <h2 class="post-title">A Gentle Introduction to 8-bit Matrix Multiplication for transformers at scale using Hugging Face Transformers, Accelerate and bitsandbytes</h2>
+  </a>
+  <div class="post-meta">
+    <div class="post-date"><i class="icon-calendar"></i>Jun 4, 2025</div><ul class="post-categories"><li>HuggingFace</li></ul></div>
+  <div class="post">
+    <p>reference: <a href="https://huggingface.co/blog/hf-bitsandbytes-integration">Hugging Face Link</a></p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p><img src="/assets/image/2025-06-04-8-bit-Matrix-Multiplication-image/image.png" alt="image.png" /></p>
+
+<p>Much larger models, like PaLM would require even more resources.</p>
+
+<p>e.g. BLOOM-176B → 8x 80GB A100 GPUs</p>
+
+<p>So, we need to find ways to reduce these requirements while preserving the model’s performance.</p>
+
+<p>more information..</p>
+
+<p>https://arxiv.org/abs/2208.07339</p>
+
+<h1 id="common-data-types-used-in-machine-learning"><strong>Common data types used in Machine Learning</strong></h1>
+
+<ul>
+  <li>
+    <p>Factors that determined model size</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>: the number of its parameters, precision
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>데이터 타입</th>
+      <th>크기</th>
+      <th>정밀도</th>
+      <th>동적 범위</th>
+      <th>특징</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>FP32</strong></td>
+      <td>4바이트</td>
+      <td>높음</td>
+      <td>넓음</td>
+      <td>표준 부동소수점, 대부분 하드웨어 지원</td>
+    </tr>
+    <tr>
+      <td><strong>FP16</strong></td>
+      <td>2바이트</td>
+      <td>중간</td>
+      <td>좁음</td>
+      <td>속도 빠름, overflow/underflow 문제</td>
+    </tr>
+    <tr>
+      <td><strong>BF16</strong></td>
+      <td>2바이트</td>
+      <td>낮음</td>
+      <td>FP32와 동일</td>
+      <td>큰 수 표현 가능, 정밀도 낮음</td>
+    </tr>
+    <tr>
+      <td><strong>TF32</strong></td>
+      <td>2.375바이트</td>
+      <td>FP16 정밀도 + BF16 범위</td>
+      <td>제한적 사용</td>
+      <td>NVIDIA Ampere에서만 사용</td>
+    </tr>
+    <tr>
+      <td><strong>INT8</strong></td>
+      <td>1바이트</td>
+      <td>낮음</td>
+      <td>매우 좁음</td>
+      <td>양자화에 사용, 추론 효율 높음</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-모델-저장-용량-계산">💾 모델 저장 용량 계산</h3>
+
+<ul>
+  <li>공식: <code class="language-plaintext highlighter-rouge">파라미터 수 × 데이터 타입 크기(바이트)</code></li>
+  <li>
+    <p>예시: BLOOM-176B 모델을 BF16(2바이트)로 저장 시 →</p>
+
+    <p><code class="language-plaintext highlighter-rouge">176 × 10⁹ × 2 bytes = 352GB</code></p>
+  </li>
+  <li>이처럼 큰 모델은 여러 GPU에 나눠 저장해야 하므로, <strong>양자화(quantization)</strong> 기법이 등장.</li>
+</ul>
+
+<h1 id="introduction-to-model-quantization"><strong>Introduction to model quantization</strong></h1>
+
+<h3 id="-fp32-대신-fp16bf16-사용">🔹 FP32 대신 FP16/BF16 사용</h3>
+
+<p>실험 결과, 4바이트의 FP32 대신 2바이트의 FP16 또는 BF16을 사용하면 <strong>거의 동일한 추론 결과</strong>를 얻을 수 있음</p>
+
+<p>→ 모델 크기를 절반으로 줄일 수 있었지만, 더 낮은 정밀도로 내려가면 <strong>추론 품질 급격히 저하</strong></p>
+
+<hr />
+
+<h3 id="-8비트-양자화-8-bit-quantization">🔹 8비트 양자화 (8-bit Quantization)</h3>
+
+<p>이 문제를 해결하기 위해 <strong>8비트 양자화</strong> 도입</p>
+
+<p>→ 이는 <strong>1바이트(8비트)</strong> 정밀도로 모델을 표현하며, <strong>모델 크기를 FP32 기준으로 1/4로 줄일 수 있음</strong></p>
+
+<p>하지만 단순히 비트를 줄이는 것이 아니라, <strong>데이터를 정수로 근사(rounding)해</strong> 표현</p>
+
+<hr />
+
+<h3 id="-양자화의-개념">🔹 양자화의 개념</h3>
+
+<p>양자화: <strong>하나의 데이터 타입에서 다른 타입으로 값을 반올림</strong>하는 것</p>
+
+<p>e.g. 값이 0..9 범위를 0..4 범위로 줄이면 값 4는 2로 매핑되고, 3도 2로 매핑</p>
+
+<p>이처럼 서로 다른 값이 동일한 값으로 매핑되는 <strong>정보 손실(lossy compression)</strong> 발생</p>
+
+<hr />
+
+<h3 id="-대표적인-8비트-양자화-기법">🔹 대표적인 8비트 양자화 기법</h3>
+
+<h3 id="1-zero-point-quantization-제로포인트-양자화">1. Zero-point Quantization (제로포인트 양자화)</h3>
+
+<ul>
+  <li>예: 실수 범위 -1.0 ~ 1.0을 정수 범위 -127 ~ 127로 매핑.</li>
+  <li>
+    <p>0.3을 예로 들면:</p>
+
+    <p><code class="language-plaintext highlighter-rouge">0.3 * 127 = 38.1</code> → 반올림하여 38 → 다시 복원하면 <code class="language-plaintext highlighter-rouge">38 / 127 = 0.2992</code></p>
+
+    <p>→ <strong>0.008의 오차</strong> 발생 (양자화 오차)</p>
+  </li>
+</ul>
+
+<h3 id="2-absmax-quantization-절대값-최대-양자화">2. Absmax Quantization (절대값 최대 양자화)</h3>
+
+<ul>
+  <li>벡터에서 절대값 기준 최대값 추출 (예: [1.2, -0.5, …, 5.4] → max = 5.4)</li>
+  <li>
+    <p>정수 범위 [-127, 127]와 맞춰 <strong>스케일링 계수(scale factor)</strong>를 계산:</p>
+
+    <p><code class="language-plaintext highlighter-rouge">127 / 5.4 = 23.5</code></p>
+  </li>
+  <li>벡터를 해당 계수로 곱해 정수 벡터로 변환:
+    <ul>
+      <li>예: [1.2, -0.5, …, 5.4] → [28, -12, …, 127] (e.g. 1.2*23.5=28.2 → 28)</li>
+    </ul>
+  </li>
+  <li>복원 시에는 해당 정수를 다시 스케일링 계수로 나눠 원래 값에 근접하게 계산 (정밀도 손실 존재)</li>
+</ul>
+
+<p><img src="/assets/image/2025-06-04-8-bit-Matrix-Multiplication-image/image%201.png" alt="image.png" /></p>
+
+<hr />
+
+<h3 id="-기타-양자화-기술">🔹 기타 양자화 기술</h3>
+
+<ul>
+  <li><strong>unsigned int8</strong>의 경우는 <strong>최솟값을 뺀 후, 최대값 기준으로 스케일링</strong>함.</li>
+  <li><strong>min-max scaling</strong>과 유사하지만, “0”을 정수 0으로 정확히 매핑하는 것이 특징.</li>
+</ul>
+
+<hr />
+
+<h3 id="-행-단위-벡터-단위-양자화-vector-wise-quantization">🔹 행 단위, 벡터 단위 양자화 (Vector-wise Quantization)</h3>
+
+<ul>
+  <li>행렬곱 A × B = C 에 대해:
+    <ul>
+      <li>A의 각 행, B의 각 열마다 <strong>개별적인 최대값</strong>을 찾아 스케일링</li>
+      <li>나중에 C를 FP16으로 복원할 때는 A와 B의 최대값 벡터로 <strong>외적(outer product)</strong>을 계산해 복원</li>
+    </ul>
+  </li>
+  <li>이 방식은 <strong>LLM.int8() 논문</strong>에 기반하여 성능 저하 없이 정밀도와 압축을 모두 달성</li>
+</ul>
+
+<hr />
+
+<h3 id="-llmint8의-중요성">🔹 LLM.int8()의 중요성</h3>
+
+<p>기존 8비트 양자화는 <strong>대규모 모델에서 정확도 하락</strong> 문제가 있었지만,</p>
+
+<p><strong>LLM.int8()</strong>은 BLOOM-176B와 같은 <strong>초거대 모델에서도 성능 저하 없이 작동</strong>하는 <strong>최초의 기법</strong>입니다.</p>
+
+<p>이는 Hugging Face의 Transformers 및 Accelerate 라이브러리에 통합되어 있습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>개념</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>FP32 vs FP16/BF16</strong></td>
+      <td>반 정밀도(2바이트)로 모델 추론 시 거의 동일한 성능을 유지하면서 메모리 절반 절약 가능</td>
+    </tr>
+    <tr>
+      <td><strong>8-bit Quantization</strong></td>
+      <td>모델 크기를 1/4로 줄이는 압축 방식, 정보 손실은 있지만 연산 속도 및 메모리 효율 증가</td>
+    </tr>
+    <tr>
+      <td><strong>Zero-point Quantization</strong></td>
+      <td>정규화 후 정수로 변환하는 방식, 정밀도 손실 발생</td>
+    </tr>
+    <tr>
+      <td><strong>Absmax Quantization</strong></td>
+      <td>텐서 내 절대값 최대를 기준으로 스케일링, 더 정밀한 양자화 가능</td>
+    </tr>
+    <tr>
+      <td><strong>Vector-wise Quantization</strong></td>
+      <td>각 벡터별로 따로 양자화하여 더 정확하게 행렬곱을 수행</td>
+    </tr>
+    <tr>
+      <td><strong>LLM.int8()</strong></td>
+      <td>성능 저하 없이 초대형 모델을 8비트로 양자화하는 혁신적 기법</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="a-gentle-summary-of-llmint8-zero-degradation-matrix-multiplication-for-large-language-models"><strong>A gentle summary of LLM.int8(): zero degradation matrix multiplication for Large Language Models</strong></h2>
+
+<p>LLM.int8()에서는 대형 트랜스포머 모델에서 기존 양자화가 실패하는 이유를 이해하려면 <strong>스케일에 따라 나타나는(스케일 의존적인) 특성</strong>을 파악하는 것이 매우 중요</p>
+
+<p>성능 저하는 <strong>아웃라이어(특정 임계값을 넘는 큰 값들)</strong> 때문</p>
+
+<p>LLM.int8() 알고리즘은 기본적으로 다음 세 단계로 행렬곱 수행:</p>
+
+<ol>
+  <li>입력된 히든 상태(hidden states)에서 <strong>열 단위로 아웃라이어 값(특정 임계값 이상인 값들)을 추출</strong></li>
+  <li>아웃라이어 값은 FP16으로, 아웃라이어가 아닌 값들은 int8로 각각 나누어 <strong>행렬곱을 수행</strong></li>
+  <li>int8 결과를 다시 FP16으로 <strong>디퀀타이즈(복원)</strong> 하고, 아웃라이어 결과와 합산해 최종 FP16 결과 얻음</li>
+</ol>
+
+<p><img src="/assets/image/2025-06-04-8-bit-Matrix-Multiplication-image/image%202.png" alt="image.png" /></p>
+
+<p><img src="/assets/image/2025-06-04-8-bit-Matrix-Multiplication-image/image%203.png" alt="image.png" /></p>
+
+<p><img src="/assets/image/2025-06-04-8-bit-Matrix-Multiplication-image/image%204.png" alt="image.png" /></p>
+
+<p><img src="/assets/image/2025-06-04-8-bit-Matrix-Multiplication-image/image%205.png" alt="image.png" /></p>
+
+<h3 id="the-importance-of-outlier-features"><strong>The importance of outlier features</strong></h3>
+
+<p><strong>트랜스포머 기반 모델이 60억(6B) 파라미터 이상으로 커질 때, 기존 양자화 방식은 실패</strong></p>
+
+<p>작은 모델에도 큰 아웃라이어가 존재하지만, 큰 모델에서는 트랜스포머의 모든 층(layer)에서 <strong>체계적이고 반복적인 패턴으로 나타나는 특정 임계값 이상의 아웃라이어가 존재</strong></p>
+
+<p>8비트 정밀도는 매우 제한적이기 때문에, 큰 값이 섞인 벡터를 양자화하면 <strong>심각한 오류가 발생 가능</strong></p>
+
+<p>게다가 트랜스포머 구조 특성상 모든 요소가 서로 연결되어 있어, 이러한 오류가 층을 거치며 <strong>점점 누적되어 성능 저하 악화</strong></p>
+
+<p>따라서, 이러한 극단적 아웃라이어를 다루기 위해 <strong>혼합 정밀도 분해(mixed-precision decomposition)</strong> 기법이 개발</p>
+
+<h3 id="inside-the-matmul"><strong>Inside the MatMul</strong></h3>
+
+<p>히든 상태(hidden states)를 계산한 후, <strong>사용자 지정 임계값(threshold)을 이용해 아웃라이어를 추출</strong>하고, 행렬을 두 부분 나눔</p>
+
+<ul>
+  <li>아웃라이어 크기 절댓값이 6 이상인 값을 모두 추출하면, <strong>전체 추론 성능이 완전히 복구됨</strong></li>
+  <li>아웃라이어 부분은 <strong>FP16(반 정밀도)</strong>로 행렬곱을 수행하여 고전적 방식으로 처리</li>
+  <li>나머지 부분은 <strong>8비트 양자화</strong>(벡터 단위 양자화: 히든 상태는 행 단위, 가중치는 열 단위)로 처리</li>
+  <li>마지막에 8비트 연산 결과를 다시 FP16으로 디퀀타이즈(복원)하여 아웃라이어 연산 결과와 합산</li>
+</ul>
+
+
+  </div></div>
+
+    </section>
+    <footer class="condensed">
+      <ul class="social about-footer condensed"><a href="https://github.com/ysm0909" target="_blank">
+          <li>
+            <i class="icon-github-circled"></i>
+          </li>
+        </a><a href="mailto:ysmm0909@naver.com" target="_blank">
+          <li>
+            <i class="icon-mail-alt"></i>
+          </li>
+        </a></ul><p class="about-footer condensed">&copy;
+        2025</p><div class="about-footer condensed">
+        <p>Dark Mode
+          <i class="icon-moon"></i>
+          <label class="switch">
+            <input type="checkbox" class="dark-mode-toggle">
+            <span class="slider round" onclick="toggleDarkMode()"></span>
+          </label>
+        </p>
+      </div>
+    </footer>
+  </main>
+  
+  <script type="text/javascript" src="/assets/js/darkmode.js"></script>
+  
+  <script src="/assets/js/simple-jekyll-search.min.js"></script>
+  <script src="/assets/js/search.js"></script>
+  
+</body>
+
+</html>
