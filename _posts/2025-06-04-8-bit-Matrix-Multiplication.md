@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "A Gentle Introduction to 8-bit Matrix Multiplication for transformers at scale using Hugging Face Transformers, Accelerate and bitsandbytes"
-date:   2025-06-04 15:28:36 +0900
+date: 2025-06-04 15:28:36 +0900
 categories: HuggingFace
 ---
 
