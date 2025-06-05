@@ -1,6 +1,18 @@
 [
   
     {
+      "title"    : "Llama Test 1(Meta)",
+      "title-lower"    : "llama test 1(meta)",
+      "sub-titile" : "",
+      "sub-titile-lower" : "",
+      "categories" : "Llama",
+      "tags"     : "",
+      "url"      : "/llama/2025/06/05/LlamaTest-Meta.html",
+      "date"     : "2025-06-05 17:41:36 +0900",
+      "content"     : "reference: Meta llama3.1 직접 다운로드 하기      Meta 사이트 접속    Download Llama        https://llama3-1.llamameta.net/*?Policy= ~ 생략        메일 확인 → 사이트 접속            터미널 접속    Download     pip install llama..."
+    } ,
+  
+    {
       "title"    : "A Gentle Introduction to 8-bit Matrix Multiplication for transformers at scale using Hugging Face Transformers, Accelerate and bitsandbytes",
       "title-lower"    : "a gentle introduction to 8-bit matrix multiplication for transformers at scale using hugging face transformers, accelerate and bitsandbytes",
       "sub-titile" : "",
