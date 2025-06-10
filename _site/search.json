@@ -1,6 +1,18 @@
 [
   
     {
+      "title"    : "Llama Test 2(GGUF+Docker)",
+      "title-lower"    : "llama test 2(gguf+docker)",
+      "sub-titile" : "",
+      "sub-titile-lower" : "",
+      "categories" : "Llama",
+      "tags"     : "",
+      "url"      : "/llama/2025/06/10/LlamaTest-Docker.html",
+      "date"     : "2025-06-10 11:13:36 +0900",
+      "content"     : "reference: A Quick Guide to Containerizing Llamafile with Docker for AI Applications (Sophia Parafina)1. To get started, copy, paste, and save the following in a file named Dockerfile.Debian Trixie..."
+    } ,
+  
+    {
       "title"    : "Llama Test 1(Meta)",
       "title-lower"    : "llama test 1(meta)",
       "sub-titile" : "",

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,700" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<title>Llama Test 2(GGUF+Docker)</title>
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Llama Test 2(GGUF+Docker) | Your awesome title</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Llama Test 2(GGUF+Docker)" />
+<meta name="author" content="GitHub User" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="reference: A Quick Guide to Containerizing Llamafile with Docker for AI Applications (Sophia Parafina)" />
+<meta property="og:description" content="reference: A Quick Guide to Containerizing Llamafile with Docker for AI Applications (Sophia Parafina)" />
+<link rel="canonical" href="http://localhost:4000/llama/2025/06/10/LlamaTest-Docker.html" />
+<meta property="og:url" content="http://localhost:4000/llama/2025/06/10/LlamaTest-Docker.html" />
+<meta property="og:site_name" content="Your awesome title" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-06-10T11:13:36+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Llama Test 2(GGUF+Docker)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"GitHub User"},"dateModified":"2025-06-10T11:13:36+09:00","datePublished":"2025-06-10T11:13:36+09:00","description":"reference: A Quick Guide to Containerizing Llamafile with Docker for AI Applications (Sophia Parafina)","headline":"Llama Test 2(GGUF+Docker)","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/llama/2025/06/10/LlamaTest-Docker.html"},"url":"http://localhost:4000/llama/2025/06/10/LlamaTest-Docker.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<script type="text/javascript" src="/assets/js/darkmode.js"></script>
+
+</head><body>
+  <main class="container">
+    <section class="about">
+      <div class="about-header condensed">
+      <div class="about-title">
+      <a href="/">
+        
+        <img src="/assets/du.jpg" alt="Seungmi Yu" />
+        
+      </a>
+      <h2 id="title">
+        <a href="/">Seungmi Yu</a>
+      </h2>
+      </div><p class="tagline">Student</p></div>
+      
+      <ul class="social about-footer condensed"><a href="https://github.com/ysm0909" target="_blank">
+          <li>
+            <i class="icon-github-circled"></i>
+          </li>
+        </a><a href="mailto:ysmm0909@naver.com" target="_blank">
+          <li>
+            <i class="icon-mail-alt"></i>
+          </li>
+        </a></ul><p class="about-footer condensed">&copy;
+        2025</p><div class="about-footer condensed">
+        <p>Dark Mode
+          <i class="icon-moon"></i>
+          <label class="switch">
+            <input type="checkbox" class="dark-mode-toggle">
+            <span class="slider round" onclick="toggleDarkMode()"></span>
+          </label>
+        </p>
+      </div>
+    </section>
+    <section class="content">
+      <div class="post-container">
+  <a class="post-link" href="/llama/2025/06/10/LlamaTest-Docker.html">
+    <h2 class="post-title">Llama Test 2(GGUF+Docker)</h2>
+  </a>
+  <div class="post-meta">
+    <div class="post-date"><i class="icon-calendar"></i>Jun 10, 2025</div><ul class="post-categories"><li>Llama</li></ul></div>
+  <div class="post">
+    <p>reference: <a href="https://www.docker.com/blog/a-quick-guide-to-containerizing-llamafile-with-docker-for-ai-applications/">A Quick Guide to Containerizing Llamafile with Docker for AI Applications (Sophia Parafina)</a></p>
+
+<h2 id="1-to-get-started-copy-paste-and-save-the-following-in-a-file-named-dockerfile"><strong>1. To get started, copy, paste, and save the following in a file named Dockerfile.</strong></h2>
+
+<p>Debian Trixie를 기반으로 Mozilla-Ocho의 <a href="https://github.com/Mozilla-Ocho/llamafile">llamafile</a> 프로젝트를 빌드하고, 가벼운 이미지로 패키징하여 실행 가능한 컨테이너를 구성하는 것</p>
+
+<div class="language-docker highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># &lt; 1단계: 빌드 스테이지로 Debian Trixie를 사용 (GCC 13 사용 가능) &gt;</span>
+<span class="c"># Use debian trixie for gcc13</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">debian:trixie</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="s">builder</span>
+ 
+<span class="c"># Set work directory</span>
+<span class="k">WORKDIR</span><span class="s"> /download</span>
+ 
+<span class="c"># Configure build container and build llamafile</span>
+<span class="k">RUN </span><span class="nb">mkdir </span>out <span class="o">&amp;&amp;</span> <span class="se">\
+</span>    apt-get update <span class="o">&amp;&amp;</span> <span class="se">\
+</span>    apt-get <span class="nb">install</span> <span class="nt">-y</span> curl git gcc make <span class="o">&amp;&amp;</span> <span class="se">\ </span><span class="c"># 필요한 도구 설치</span>
+    git clone https://github.com/Mozilla-Ocho/llamafile.git  &amp;&amp; \ # 소스 코드 클론
+    curl -L -o ./unzip https://cosmo.zip/pub/cosmos/bin/unzip &amp;&amp; \ # 커스텀 unzip 도구 다운로드
+    chmod 755 unzip &amp;&amp; mv unzip /usr/local/bin &amp;&amp; \ # 실행 권한 부여 및 경로 이동
+    cd llamafile &amp;&amp; make -j8 LLAMA_DISABLE_LOGS=1 &amp;&amp; \ # 로깅 비활성화하고 병렬 빌드 수행
+    make install PREFIX=/download/out <span class="c"># 빌드 결과물을 지정된 경로로 설치</span>
+ 
+<span class="c"># &lt; 2단계: 실행 스테이지로 Debian stable 사용 (더 작고 안전한 이미지) &gt;</span>
+<span class="c"># Create container</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">debian:stable</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="s">out</span>
+ 
+<span class="c"># Create a non-root user</span>
+<span class="k">RUN </span>addgroup <span class="nt">--gid</span> 1000 user <span class="o">&amp;&amp;</span> <span class="se">\
+</span>    adduser <span class="nt">--uid</span> 1000 <span class="nt">--gid</span> 1000 <span class="nt">--disabled-password</span> <span class="nt">--gecos</span> <span class="s2">""</span> user
+ 
+<span class="c"># Switch to user</span>
+<span class="k">USER</span><span class="s"> user</span>
+ 
+<span class="c"># Set working directory</span>
+<span class="k">WORKDIR</span><span class="s"> /usr/local</span>
+ 
+<span class="c"># Copy llamafile and man pages</span>
+<span class="k">COPY</span><span class="s"> --from=builder /download/out/bin ./bin</span>
+<span class="k">COPY</span><span class="s"> --from=builder /download/out/share ./share/man</span>
+ 
+<span class="c"># Expose 8080 port.</span>
+<span class="k">EXPOSE</span><span class="s"> 8080</span>
+ 
+<span class="c"># Set entrypoint.</span>
+<span class="k">ENTRYPOINT</span><span class="s"> ["/bin/sh", "/usr/local/bin/llamafile"]</span>
+ 
+<span class="c"># Set default command.</span>
+<span class="k">CMD</span><span class="s"> ["--server", "--host", "0.0.0.0", "-m", "/model"]</span>
+</code></pre></div></div>
+
+<h2 id="2-to-build-the-container-run"><strong>2. To build the container, run:</strong></h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build <span class="nt">-t</span> llamafile <span class="nb">.</span>
+</code></pre></div></div>
+
+<p>⛔ <strong>Error 1</strong></p>
+
+<p><img src="/assets/image/2025-06-10-LlamaTest-Docker-Image/image.png" alt="image.png" /></p>
+
+<p><strong>💡 Solution</strong></p>
+
+<p>참고: <a href="https://seulcode.tistory.com/557">https://seulcode.tistory.com/557</a></p>
+
+<ol>
+  <li>
+    <p>docker group 생성</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">sudo </span>groupadd docker
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>docker group에 유저 추가</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">sudo </span>usermod <span class="nt">-aG</span> docker <span class="nv">$USER</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>아래 명령어 실행</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> newgrp docker
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>⛔ <strong>Error 2</strong></p>
+
+<p><img src="/assets/image/2025-06-10-LlamaTest-Docker-Image/image%201.png" alt="image.png" /></p>
+
+<p><strong>💡 Solution</strong></p>
+
+<div class="language-docker highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Configure build container and build llamafile</span>
+<span class="k">RUN </span><span class="nb">mkdir </span>out <span class="o">&amp;&amp;</span> <span class="se">\
+</span>    apt-get update <span class="o">&amp;&amp;</span> <span class="se">\
+</span>    apt-get <span class="nb">install</span> <span class="nt">-y</span> curl git gcc make <span class="o">&amp;&amp;</span> <span class="se">\ </span><span class="c"># 필요한 도구 설치</span>
+    git clone https://github.com/Mozilla-Ocho/llamafile.git  &amp;&amp; \ # 소스 코드 클론
+    curl -L -o ./unzip https://cosmo.zip/pub/cosmos/bin/unzip &amp;&amp; \ # 커스텀 unzip 도구 다운로드
+    chmod 755 unzip &amp;&amp; mv unzip /usr/local/bin &amp;&amp; \ # 실행 권한 부여 및 경로 이동
+    cd llamafile &amp;&amp; make -j8 LLAMA_DISABLE_LOGS=1 &amp;&amp; \ # 로깅 비활성화하고 병렬 빌드 수행
+    make install PREFIX=/download/out <span class="c"># 빌드 결과물을 지정된 경로로 설치</span>
+</code></pre></div></div>
+
+<p><strong>여러 개의 RUN 명령어로 나눔</strong></p>
+
+<div class="language-docker highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Prepare output directory</span>
+<span class="k">RUN </span><span class="nb">mkdir</span> /download/out
+<span class="c"># Install required packages</span>
+<span class="k">RUN </span>apt-get update <span class="o">&amp;&amp;</span> <span class="se">\
+</span>    apt-get <span class="nb">install</span> <span class="nt">-y</span> curl git gcc g++ make build-essential zlib1g-dev
+<span class="c"># Clone llamafile repository</span>
+<span class="k">RUN </span>git clone https://github.com/Mozilla-Ocho/llamafile.git
+<span class="c"># Install unzip from cosmos.zip</span>
+<span class="k">RUN </span>curl <span class="nt">-L</span> <span class="nt">-o</span> ./unzip https://cosmo.zip/pub/cosmos/bin/unzip <span class="o">&amp;&amp;</span> <span class="se">\
+</span>    <span class="nb">chmod </span>755 unzip <span class="o">&amp;&amp;</span> <span class="nb">mv </span>unzip /usr/local/bin
+<span class="c"># Set working directory to the repo</span>
+<span class="k">WORKDIR</span><span class="s"> /download/llamafile</span>
+<span class="c"># Build llamafile</span>
+<span class="k">RUN </span>make <span class="nv">LLAMA_DISABLE_LOGS</span><span class="o">=</span>1
+<span class="c"># Install llamafile to output dir</span>
+<span class="k">RUN </span>make <span class="nb">install </span><span class="nv">PREFIX</span><span class="o">=</span>/download/out
+</code></pre></div></div>
+
+<h2 id="3-llamafilegguf-download"><strong>3. LLamafile(GGUF) Download</strong></h2>
+
+<p><a href="https://huggingface.co/bartowski/Llama-3.3-70B-Instruct-GGUF/blob/main/Llama-3.3-70B-Instruct-Q3_K_M.gguf">(Huggingface) Llama-3.3-70B-Instruct-GGUF </a></p>
+
+<h2 id="4-running-the-llamafile-container"><strong>4. Running the llamafile container</strong></h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="nt">-v</span> ./model/&lt;모델명.gguf&gt;:/model <span class="nt">-p</span> 8080:8080 llamafile
+</code></pre></div></div>
+
+<p>➡️ model 폴더 안에 있어야 함.</p>
+
+<p><img src="/assets/image/2025-06-10-LlamaTest-Docker-Image/image%202.png" alt="image.png" /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://127.0.0.1:8080
+</code></pre></div></div>
+
+<p>➡️ llama.cpp interface 접근</p>
+
+<p><img src="/assets/image/2025-06-10-LlamaTest-Docker-Image/image%203.png" alt="image.png" /></p>
+
+<h1 id="5-test">5. Test</h1>
+
+<p>✅ <strong>Test 1</strong></p>
+
+<p><img src="/assets/image/2025-06-10-LlamaTest-Docker-Image/image%204.png" alt="image.png" /></p>
+
+<p><strong>✅ Test2</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-s</span> http://localhost:8080/v1/chat/completions <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="nt">-d</span> <span class="s1">'{
+  "model": "gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."
+    },
+    {
+      "role": "user",
+      "content": "Compose a poem that explains the concept of recursion in programming."
+    }
+  ]
+}'</span> | python3 <span class="nt">-c</span> <span class="s1">'
+import json
+import sys
+json.dump(json.load(sys.stdin), sys.stdout, indent=2)
+print()
+'</span>
+</code></pre></div></div>
+
+<p><img src="/assets/image/2025-06-10-LlamaTest-Docker-Image/image%205.png" alt="image.png" /></p>
+
+<p><strong>⬇️ output</strong></p>
+
+<p><img src="/assets/image/2025-06-10-LlamaTest-Docker-Image/image%206.png" alt="image.png" /></p>
+
+<p>✅ <strong>Check</strong></p>
+
+<ul>
+  <li>정상 작동 여부 확인</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker ps
+</code></pre></div></div>
+
+<p><img src="/assets/image/2025-06-10-LlamaTest-Docker-Image/image%207.png" alt="image.png" /></p>
+
+<ul>
+  <li>종료된 컨테이너 확인</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker ps <span class="nt">-a</span>
+</code></pre></div></div>
+
+<p><img src="/assets/image/2025-06-10-LlamaTest-Docker-Image/image%208.png" alt="image.png" /></p>
+
+<ul>
+  <li>로그 확인</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker logs &lt;컨테이너 ID&gt;
+</code></pre></div></div>
+
+<p>➡️ 로그통해 사이트 접속 llama.cpp interface 접근 가능</p>
+
+<p><img src="/assets/image/2025-06-10-LlamaTest-Docker-Image/image%209.png" alt="image.png" /></p>
+
+<ul>
+  <li>컨테이너 종료</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker stop &lt;컨테이너 ID&gt;
+</code></pre></div></div>
+
+
+  </div></div>
+
+    </section>
+    <footer class="condensed">
+      <ul class="social about-footer condensed"><a href="https://github.com/ysm0909" target="_blank">
+          <li>
+            <i class="icon-github-circled"></i>
+          </li>
+        </a><a href="mailto:ysmm0909@naver.com" target="_blank">
+          <li>
+            <i class="icon-mail-alt"></i>
+          </li>
+        </a></ul><p class="about-footer condensed">&copy;
+        2025</p><div class="about-footer condensed">
+        <p>Dark Mode
+          <i class="icon-moon"></i>
+          <label class="switch">
+            <input type="checkbox" class="dark-mode-toggle">
+            <span class="slider round" onclick="toggleDarkMode()"></span>
+          </label>
+        </p>
+      </div>
+    </footer>
+  </main>
+  
+  <script type="text/javascript" src="/assets/js/darkmode.js"></script>
+  
+  <script src="/assets/js/simple-jekyll-search.min.js"></script>
+  <script src="/assets/js/search.js"></script>
+  
+</body>
+
+</html>
