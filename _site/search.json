@@ -1,6 +1,18 @@
 [
   
     {
+      "title"    : "Llama Fine-tuning Test(Unsloth)",
+      "title-lower"    : "llama fine-tuning test(unsloth)",
+      "sub-titile" : "",
+      "sub-titile-lower" : "",
+      "categories" : "Llama",
+      "tags"     : "",
+      "url"      : "/llama/2025/06/19/Llama-Fine-tuning-Test(Unsloth).html",
+      "date"     : "2025-06-19 13:13:36 +0900",
+      "content"     : "reference: Unsloth⚙️ Setting✅ 1. 가상환경 생성❗#step1conda create -n unsloth_env python=3.11 -y#step2conda activate unsloth_env#step3# PyTorch + CUDA 12.1 (pip로 설치, 공식 wheel)pip install torch torchvision..."
+    } ,
+  
+    {
       "title"    : "Llama Test 2(GGUF+Docker)",
       "title-lower"    : "llama test 2(gguf+docker)",
       "sub-titile" : "",

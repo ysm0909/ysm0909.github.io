@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,700" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/style.css">
+<title>Llama Fine-tuning Test(Unsloth)</title>
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Llama Fine-tuning Test(Unsloth) | Your awesome title</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Llama Fine-tuning Test(Unsloth)" />
+<meta name="author" content="GitHub User" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="reference: Unsloth" />
+<meta property="og:description" content="reference: Unsloth" />
+<link rel="canonical" href="http://localhost:4000/llama/2025/06/19/Llama-Fine-tuning-Test(Unsloth).html" />
+<meta property="og:url" content="http://localhost:4000/llama/2025/06/19/Llama-Fine-tuning-Test(Unsloth).html" />
+<meta property="og:site_name" content="Your awesome title" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-06-19T13:13:36+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Llama Fine-tuning Test(Unsloth)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"GitHub User"},"dateModified":"2025-06-19T13:13:36+09:00","datePublished":"2025-06-19T13:13:36+09:00","description":"reference: Unsloth","headline":"Llama Fine-tuning Test(Unsloth)","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/llama/2025/06/19/Llama-Fine-tuning-Test(Unsloth).html"},"url":"http://localhost:4000/llama/2025/06/19/Llama-Fine-tuning-Test(Unsloth).html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<script type="text/javascript" src="/assets/js/darkmode.js"></script>
+
+</head><body>
+  <main class="container">
+    <section class="about">
+      <div class="about-header condensed">
+      <div class="about-title">
+      <a href="/">
+        
+        <img src="/assets/du.jpg" alt="Seungmi Yu" />
+        
+      </a>
+      <h2 id="title">
+        <a href="/">Seungmi Yu</a>
+      </h2>
+      </div><p class="tagline">Student</p></div>
+      
+      <ul class="social about-footer condensed"><a href="https://github.com/ysm0909" target="_blank">
+          <li>
+            <i class="icon-github-circled"></i>
+          </li>
+        </a><a href="mailto:ysmm0909@naver.com" target="_blank">
+          <li>
+            <i class="icon-mail-alt"></i>
+          </li>
+        </a></ul><p class="about-footer condensed">&copy;
+        2025</p><div class="about-footer condensed">
+        <p>Dark Mode
+          <i class="icon-moon"></i>
+          <label class="switch">
+            <input type="checkbox" class="dark-mode-toggle">
+            <span class="slider round" onclick="toggleDarkMode()"></span>
+          </label>
+        </p>
+      </div>
+    </section>
+    <section class="content">
+      <div class="post-container">
+  <a class="post-link" href="/llama/2025/06/19/Llama-Fine-tuning-Test(Unsloth).html">
+    <h2 class="post-title">Llama Fine-tuning Test(Unsloth)</h2>
+  </a>
+  <div class="post-meta">
+    <div class="post-date"><i class="icon-calendar"></i>Jun 19, 2025</div><ul class="post-categories"><li>Llama</li></ul></div>
+  <div class="post">
+    <p>reference: <a href="https://github.com/unslothai/unsloth">Unsloth</a></p>
+
+<h1 id="️-setting"><strong>⚙️</strong> Setting</h1>
+
+<h2 id="-1-가상환경-생성">✅ 1. 가상환경 생성<strong>❗</strong></h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#step1</span>
+conda create <span class="nt">-n</span> unsloth_env <span class="nv">python</span><span class="o">=</span>3.11 <span class="nt">-y</span>
+
+<span class="c">#step2</span>
+conda activate unsloth_env
+
+<span class="c">#step3</span>
+<span class="c"># PyTorch + CUDA 12.1 (pip로 설치, 공식 wheel)</span>
+pip <span class="nb">install </span>torch torchvision torchaudio <span class="nt">--index-url</span> https://download.pytorch.org/whl/cu121
+</code></pre></div></div>
+
+<h2 id="-2-cuda-설치-여부-확인">✅ 2. CUDA 설치 여부 확인</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nvcc <span class="nt">--version</span>
+</code></pre></div></div>
+
+<p><img src="/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image.png" alt="image.png" /></p>
+
+<h2 id="-3-pytorch가-gpu를-사용하는지-확인">✅ 3. PyTorch가 GPU를 사용하는지 확인</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">torch</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">CUDA 사용 가능 여부: </span><span class="sh">"</span><span class="p">,</span> <span class="n">torch</span><span class="p">.</span><span class="n">cuda</span><span class="p">.</span><span class="nf">is_available</span><span class="p">())</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">GPU: </span><span class="sh">"</span><span class="p">,</span> <span class="n">torch</span><span class="p">.</span><span class="n">cuda</span><span class="p">.</span><span class="nf">get_device_name</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">torch</span><span class="p">.</span><span class="n">cuda</span><span class="p">.</span><span class="nf">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="sh">"</span><span class="s">사용불가</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image%201.png" alt="image.png" /></p>
+
+<h2 id="-4-pytorch-gpu-버전-설치-확인">✅ 4. PyTorch GPU 버전 설치 확인</h2>
+
+<p><img src="/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image%202.png" alt="image.png" /></p>
+
+<p>⚠️ 호환 버전 확인 ⬇️</p>
+
+<p>For other torch versions, we support <code class="language-plaintext highlighter-rouge">torch211</code>, <code class="language-plaintext highlighter-rouge">torch212</code>, <code class="language-plaintext highlighter-rouge">torch220</code>, <code class="language-plaintext highlighter-rouge">torch230</code>, <code class="language-plaintext highlighter-rouge">torch240</code> and for CUDA versions, we support <code class="language-plaintext highlighter-rouge">cu118</code> and <code class="language-plaintext highlighter-rouge">cu121</code> and <code class="language-plaintext highlighter-rouge">cu124</code>. </p>
+
+<h2 id="️-vs-code-경고-해결">⚠️ VS Code 경고 해결</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>We noticed you're using a conda environment. If you are experiencing issues with this environment in the integrated terminal, we recommend that you let the Python extension change "terminal.integrated.inheritEnv" to false in your user settings
+</code></pre></div></div>
+
+<p>➡️ VS Code에서 열려 있는 터미널이 <strong>conda 가상환경을 제대로 인식하지 못할 수도 있다</strong>는 의미</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Ctrl + Shift + P</code> → <code class="language-plaintext highlighter-rouge">Preferences: Open User Settings (JSON)</code></li>
+</ul>
+
+<p><img src="/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image%203.png" alt="image.png" /></p>
+
+<h1 id="1️⃣-installation">1️⃣ Installation</h1>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>unsloth
+</code></pre></div></div>
+
+<p>❕python 환경: 3.10 이상</p>
+
+<p><img src="/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image%204.png" alt="image.png" /></p>
+
+<p>➡️ torchaudio 사용할 일 없을 거 같으니 일단 보류</p>
+
+<h1 id="2️⃣-unsloth">2️⃣ <strong>Unsloth</strong></h1>
+
+<h2 id="️-unslothmeta-llama-31-8b-instruct-bnb-4bit--사용">➡️ <code class="language-plaintext highlighter-rouge">unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit</code>  사용!</h2>
+
+<p>from datasets import load_dataset
+dataset = load_dataset(“hpe-ai/medical-cases-classification-tutorial”, split=”train”)</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ✅ Unsloth에서 제공하는 빠른 LLM 로딩 기능을 사용하기 위해 import
+</span><span class="kn">from</span> <span class="n">unsloth</span> <span class="kn">import</span> <span class="n">FastLanguageModel</span>
+
+<span class="c1"># ✅ PyTorch는 텐서 계산, GPU 연산 등을 위한 핵심 라이브러리
+</span><span class="kn">import</span> <span class="n">torch</span>
+
+<span class="c1"># ✅ 최대 토큰 길이 설정 (예: 하나의 문장이 2048 토큰까지 가능)
+</span><span class="n">max_seq_length</span> <span class="o">=</span> <span class="mi">2048</span>  <span class="c1"># 원하는 길이로 설정 가능! 내부적으로 RoPE Scaling 지원됨
+</span>
+<span class="c1"># ✅ 데이터 타입 설정
+# - None으로 두면 자동 감지됨
+# - float16은 T4, V100 GPU에 적합
+# - bfloat16은 A100, RTX 3090, 4090 등 Ampere 이상에 적합
+</span><span class="n">dtype</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="c1"># ✅ 4bit 양자화 사용 여부
+# - True로 하면 메모리 사용량이 줄고 학습 및 추론이 더 빨라짐
+</span><span class="n">load_in_4bit</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="c1"># ✅ 모델과 토크나이저 로딩
+</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">FastLanguageModel</span><span class="p">.</span><span class="nf">from_pretrained</span><span class="p">(</span>
+    <span class="n">model_name</span> <span class="o">=</span> <span class="sh">"</span><span class="s">unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit</span><span class="sh">"</span><span class="p">,</span>  <span class="c1"># 사용할 모델 이름
+</span>    <span class="n">max_seq_length</span> <span class="o">=</span> <span class="n">max_seq_length</span><span class="p">,</span>          <span class="c1"># 최대 입력 길이
+</span>    <span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span><span class="p">,</span>                            <span class="c1"># float16, bfloat16, None 중 선택
+</span>    <span class="n">load_in_4bit</span> <span class="o">=</span> <span class="n">load_in_4bit</span><span class="p">,</span>              <span class="c1"># 4bit 양자화 사용 여부(양자화 모델: 다시 양자화하는 게 아니라, 올바르게 로딩하는 용도)
+</span>    <span class="n">token</span> <span class="o">=</span> <span class="sh">"</span><span class="s">hf_...</span><span class="sh">"</span>                        <span class="c1"># 허깅페이스의 접근 토큰 (Gated 모델인 경우 필요)
+</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image%205.png" alt="image.png" /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ✅ 미리 4bit로 양자화된 모델 리스트
+# - 다운로드 속도가 빠르고 메모리 부족(OOM) 문제도 줄어듦
+fourbit_models = [
+    "unsloth/Meta-Llama-3.1-8B-bnb-4bit",      # Llama 3.1 - 8B 모델, 2배 빠른 성능
+    "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit",
+    "unsloth/Meta-Llama-3.1-70B-bnb-4bit",
+    "unsloth/Meta-Llama-3.1-405B-bnb-4bit",    # 405B 모델도 4bit로 지원!
+    "unsloth/Mistral-Nemo-Base-2407-bnb-4bit", # 새 버전 Mistral 12B 모델, 성능 향상
+    "unsloth/Mistral-Nemo-Instruct-2407-bnb-4bit",
+    "unsloth/mistral-7b-v0.3-bnb-4bit",        # Mistral v0.3 버전
+    "unsloth/mistral-7b-instruct-v0.3-bnb-4bit",
+    "unsloth/Phi-3.5-mini-instruct",           # Phi 3.5 모델
+    "unsloth/Phi-3-medium-4k-instruct",
+    "unsloth/gemma-2-9b-bnb-4bit",
+    "unsloth/gemma-2-27b-bnb-4bit",            # Google Gemma 모델도 지원됨
+]  # 전체 모델 목록은 https://huggingface.co/unsloth 참고
+</code></pre></div></div>
+
+<h3 id="-fastlanguagemodelfrom_pretrained">📁 <code class="language-plaintext highlighter-rouge">FastLanguageModel.from_pretrained</code></h3>
+
+<ul>
+  <li>Hugging Face에 있는 모델을 <strong>빠르고 효율적으로 불러오기 위한 함수</strong></li>
+  <li>Unsloth가 내부적으로 4bit 지원, 토크나이저 최적화, GPU 최적화 등 처리</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># LoRA adapters 
+</span><span class="n">model</span> <span class="o">=</span> <span class="n">FastLanguageModel</span><span class="p">.</span><span class="nf">get_peft_model</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+    
+    <span class="c1"># LoRA의 rank 값. 클수록 표현력은 올라가지만 VRAM 사용량도 증가합니다.
+</span>    <span class="n">r</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>  <span class="c1"># 8, 16, 32, 64, 128 등 사용 가능
+</span>
+    <span class="c1"># LoRA를 적용할 대상 모듈들. Transformer의 핵심 연산 부분입니다.
+</span>    <span class="n">target_modules</span> <span class="o">=</span> <span class="p">[</span><span class="sh">"</span><span class="s">q_proj</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">k_proj</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">v_proj</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">o_proj</span><span class="sh">"</span><span class="p">,</span>
+                      <span class="sh">"</span><span class="s">gate_proj</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">up_proj</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">down_proj</span><span class="sh">"</span><span class="p">,],</span>
+
+    <span class="c1"># LoRA의 scaling factor로, 보통 r과 같은 값을 주는 것이 일반적입니다.
+</span>    <span class="n">lora_alpha</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+
+    <span class="c1"># LoRA에 적용할 dropout 비율. 0으로 설정하면 성능 및 속도 최적화에 유리합니다.
+</span>    <span class="n">lora_dropout</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># 어떤 값이든 가능하나, 0이 가장 최적화되어 있음
+</span>
+    <span class="c1"># bias 학습 여부. "none"이면 bias 파라미터는 학습하지 않음 (성능/속도 최적화됨)
+</span>    <span class="c1"># bias: 뉴런이 더 다양한 값을 출력할 수 있게 해주는 추가적인 상수
+</span>		<span class="c1"># LoRA에서는 대부분 학습 대상에서 제외시켜도 무방
+</span>    <span class="n">bias</span> <span class="o">=</span> <span class="sh">"</span><span class="s">none</span><span class="sh">"</span><span class="p">,</span>
+
+    <span class="c1"># ✅ "unsloth"의 커스텀 체크포인팅 방식은 VRAM을 30% 절약하고, batch size를 2배 키울 수 있음
+</span>    <span class="n">use_gradient_checkpointing</span> <span class="o">=</span> <span class="sh">"</span><span class="s">unsloth</span><span class="sh">"</span><span class="p">,</span>  <span class="c1"># True 또는 "unsloth" 사용 가능
+</span>
+    <span class="c1"># 랜덤성 고정을 위한 시드값 설정 (재현성 보장)
+</span>    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">3407</span><span class="p">,</span>
+
+    <span class="c1"># LoRA의 변형 기법 중 하나인 Rank-Stabilized LoRA 사용 여부
+</span>    <span class="n">use_rslora</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>  <span class="c1"># 일반적인 LoRA 사용
+</span>
+    <span class="c1"># LoftQ라는 또 다른 양자화 학습 기법 설정 (사용하지 않으면 None으로 설정)
+</span>    <span class="n">loftq_config</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="3️⃣-data-prep">3️⃣ Data Prep</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Alpaca 형식의 프롬프트 템플릿 정의
+</span><span class="n">alpaca_prompt</span> <span class="o">=</span> <span class="sh">"""</span><span class="s">Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.
+
+### Instruction:
+{}
+
+### Input:
+{}
+
+### Response:
+{}</span><span class="sh">"""</span>
+
+<span class="c1"># 모델의 EOS (End of Sequence) 토큰을 가져옴 – 텍스트 끝 표시용
+</span><span class="n">EOS_TOKEN</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">.</span><span class="n">eos_token</span>  <span class="c1"># 반드시 EOS_TOKEN을 추가해야 함 (텍스트가 무한히 생성되지 않도록 함)
+</span>
+<span class="c1"># 데이터셋의 각 예제를 Alpaca 프롬프트 형식으로 변환하는 함수 정의
+</span><span class="k">def</span> <span class="nf">formatting_prompts_func</span><span class="p">(</span><span class="n">examples</span><span class="p">):</span>
+    <span class="c1"># 분류 모델 생성위해 Instruction 정의
+</span>    <span class="n">instructions</span> <span class="o">=</span> <span class="sh">"</span><span class="s">Classify the following medical transcription into the correct medical specialty.</span><span class="sh">"</span>
+    <span class="n">inputs</span>       <span class="o">=</span> <span class="n">examples</span><span class="p">[</span><span class="sh">"</span><span class="s">input</span><span class="sh">"</span><span class="p">]</span>        <span class="c1"># input 열 가져오기
+</span>    <span class="n">outputs</span>      <span class="o">=</span> <span class="n">examples</span><span class="p">[</span><span class="sh">"</span><span class="s">output</span><span class="sh">"</span><span class="p">]</span>       <span class="c1"># output 열 가져오기
+</span>    
+    <span class="c1"># instruction, input, output을 프롬프트 형식에 맞게 채우고 EOS 토큰 추가
+</span>    <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">alpaca_prompt</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">instruction</span><span class="p">,</span> <span class="n">input_</span><span class="p">,</span> <span class="n">output_</span><span class="p">)</span> <span class="o">+</span> <span class="n">EOS_TOKEN</span>
+        <span class="k">for</span> <span class="n">input_</span><span class="p">,</span> <span class="n">output_</span> <span class="ow">in</span> <span class="nf">zip</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="p">{</span><span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="p">:</span> <span class="n">texts</span><span class="p">}</span> <span class="c1"># HuggingFace datasets 포맷에 맞게 딕셔너리 형태로 반환
+# 데이터셋 불러오기 (train split만 사용)
+</span><span class="kn">from</span> <span class="n">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="nf">load_dataset</span><span class="p">(</span><span class="sh">"</span><span class="s">hpe-ai/medical-cases-classification-tutorial</span><span class="sh">"</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="sh">"</span><span class="s">train</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="c1"># map 함수를 이용해 데이터셋 전체에 formatting_prompts_func 적용
+# batched=True 설정 시 한 번에 여러 샘플을 처리 가능 (성능 향상)
+</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="n">formatting_prompts_func</span><span class="p">,</span> <span class="n">batched</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<h1 id="4️⃣-train-the-model">4️⃣ <strong>Train the model</strong></h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">trl</span> <span class="kn">import</span> <span class="n">SFTTrainer</span>
+<span class="kn">from</span> <span class="n">transformers</span> <span class="kn">import</span> <span class="n">TrainingArguments</span>
+<span class="kn">from</span> <span class="n">unsloth</span> <span class="kn">import</span> <span class="n">is_bfloat16_supported</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="nc">SFTTrainer</span><span class="p">(</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">,</span>                          <span class="c1"># 파인튜닝할 사전학습된 언어 모델
+</span>    <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">,</span>                  <span class="c1"># 모델에 맞는 토크나이저
+</span>    <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">,</span>                <span class="c1"># 학습에 사용할 데이터셋
+</span>    <span class="n">dataset_text_field</span> <span class="o">=</span> <span class="sh">"</span><span class="s">text</span><span class="sh">"</span><span class="p">,</span>            <span class="c1"># 데이터셋 내 텍스트가 있는 필드 이름
+</span>    <span class="n">max_seq_length</span> <span class="o">=</span> <span class="n">max_seq_length</span><span class="p">,</span>       <span class="c1"># 최대 시퀀스 길이 (토큰 수)
+</span>    <span class="n">dataset_num_proc</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>                   <span class="c1"># 데이터 전처리에 사용할 프로세스 개수 (병렬 처리)
+</span>    <span class="n">packing</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>                        <span class="c1"># 짧은 시퀀스 붙여서 배치 처리하는 기능 (속도 향상용), 여기선 비활성화
+</span>    <span class="n">args</span> <span class="o">=</span> <span class="nc">TrainingArguments</span><span class="p">(</span>
+        <span class="n">per_device_train_batch_size</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>   <span class="c1"># 한 GPU 당 배치 크기
+</span>        <span class="n">gradient_accumulation_steps</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>   <span class="c1"># 그래디언트 누적 스텝 수 (실질 배치 크기 = 2 * 4 = 8)
+</span>        <span class="n">warmup_steps</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>                  <span class="c1"># 학습 초기 학습률 점진적 증가 기간
+</span>        <span class="c1"># num_train_epochs = 1,            # 전체 에포크 수 (주석 처리됨, 대신 max_steps 사용)
+</span>        <span class="n">max_steps</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>                    <span class="c1"># 최대 학습 스텝 수 (60 스텝까지만 학습)
+</span>        <span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">2e-4</span><span class="p">,</span>             <span class="c1"># 학습률
+</span>        <span class="n">fp16</span> <span class="o">=</span> <span class="ow">not</span> <span class="nf">is_bfloat16_supported</span><span class="p">(),</span>   <span class="c1"># bf16 미지원 시 fp16 사용 (혼합 정밀도)
+</span>        <span class="n">bf16</span> <span class="o">=</span> <span class="nf">is_bfloat16_supported</span><span class="p">(),</span>        <span class="c1"># bf16 지원 시 활성화
+</span>        <span class="n">logging_steps</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>                <span class="c1"># 몇 스텝마다 로그 기록할지 (여기선 매 스텝)
+</span>        <span class="n">optim</span> <span class="o">=</span> <span class="sh">"</span><span class="s">adamw_8bit</span><span class="sh">"</span><span class="p">,</span>             <span class="c1"># 8비트 양자화된 AdamW 옵티마이저 사용 (메모리 절약 목적)
+</span>        <span class="n">weight_decay</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>              <span class="c1"># 가중치 감쇠 계수 (정규화)
+</span>        <span class="n">lr_scheduler_type</span> <span class="o">=</span> <span class="sh">"</span><span class="s">linear</span><span class="sh">"</span><span class="p">,</span>     <span class="c1"># 학습률 스케줄러 (선형 감소)
+</span>        <span class="n">seed</span> <span class="o">=</span> <span class="mi">3407</span><span class="p">,</span>                      <span class="c1"># 재현성을 위한 시드 설정
+</span>        <span class="n">output_dir</span> <span class="o">=</span> <span class="sh">"</span><span class="s">outputs</span><span class="sh">"</span><span class="p">,</span>           <span class="c1"># 체크포인트 저장 폴더 경로
+</span>        <span class="n">report_to</span> <span class="o">=</span> <span class="sh">"</span><span class="s">none</span><span class="sh">"</span><span class="p">,</span>               <span class="c1"># WandB 등 외부 로그 비활성화
+</span>    <span class="p">),</span>
+<span class="p">)</span>
+
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">trainer_stats</span> <span class="o">=</span> <span class="n">trainer</span><span class="p">.</span><span class="nf">train</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image%206.png" alt="image.png" /></p>
+
+<h1 id="5️⃣-inference">5️⃣ <strong>Inference</strong></h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 🧾 Prompt 형식 동일하게 유지
+</span><span class="n">alpaca_prompt</span> <span class="o">=</span> <span class="sh">"""</span><span class="s">Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.
+
+### Instruction:
+{}
+
+### Input:
+{}
+
+### Response:
+{}</span><span class="sh">"""</span>
+
+<span class="c1"># ✅ 예시 문장 (Inference용)
+</span><span class="n">instruction</span> <span class="o">=</span> <span class="sh">"</span><span class="s">Classify the following medical transcription into the correct medical specialty.</span><span class="sh">"</span>
+<span class="n">transcription</span> <span class="o">=</span> <span class="sh">"</span><span class="s">PREOPERATIVE DIAGNOSES:,1. Right axillary adenopathy.,2. Thrombocytopenia.,3. Hepatosplenomegaly.,POSTOPERATIVE DIAGNOSES:,1. Right axillary adenopathy.,2. Thrombocytopenia.,3. Hepatosplenomegaly.,PROCEDURE PERFORMED: ,Right axillary lymph node biopsy.,ANESTHESIA: , Local with sedation.,COMPLICATIONS: , None.,DISPOSITION: , The patient tolerated the procedure well and was transferred to the recovery room in stable condition.,BRIEF HISTORY: ,The patient is a 37-year-old male who presented to ABCD General Hospital secondary to hiccups and was ultimately found to have a right axillary mass to be severely thrombocytopenic with a platelet count of 2000 as well as having hepatosplenomegaly. The working diagnosis is lymphoma, however, the Hematology and Oncology Departments were requesting a lymph node biopsy in order to confirm the diagnosis as well as prognosis. Thus, the patient was scheduled for a lymph node biopsy with platelets running secondary to thrombocytopenia at the time of surgery.,INTRAOPERATIVE FINDINGS: , The patient was found to have a large right axillary lymphadenopathy, one of the lymph node was sent down as a fresh specimen.,PROCEDURE: ,After informed written consent, risks and benefits of this procedure were explained to the patient. The patient was brought to the operating suite, prepped and draped in a normal sterile fashion. Multiple lymph nodes were palpated in the right axilla, however, the most inferior node was to be removed. First, the skin was anesthetized with 1% lidocaine solution. Next, using a #15 blade scalpel, an incision was made approximately 4 cm in length transversally in the inferior axilla. Next, using electro Bovie cautery, maintaining hemostasis, dissection was carried down to the lymph node. The lymph node was then completely excised using electro Bovie cautery as well as hemostats to maintain hemostasis and then lymph node was sent to specimen fresh to the lab. Several hemostats were used, suture ligated with #3-0 Vicryl suture and hemostasis was maintained. Next the deep dermal layers were approximated with #3-0 Vicryl suture. After the wound has been copiously irrigated, the skin was closed with running subcuticular #4-0 undyed Vicryl suture and the pathology is pending. The patient did tolerated the procedure well. Steri-Strips and sterile dressings were applied and the patient was transferred to the Recovery in stable condition.</span><span class="sh">"</span>
+<span class="c1"># ✅ 프롬프트 생성 (output은 빈칸)
+</span><span class="n">prompt</span> <span class="o">=</span> <span class="n">alpaca_prompt</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">instruction</span><span class="p">,</span> <span class="n">transcription</span><span class="p">,</span> <span class="sh">""</span><span class="p">)</span>
+
+<span class="c1"># ✅ 토크나이즈 + 추론
+</span><span class="kn">from</span> <span class="n">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span>
+
+<span class="n">inputs</span> <span class="o">=</span> <span class="nf">tokenizer</span><span class="p">([</span><span class="n">prompt</span><span class="p">],</span> <span class="n">return_tensors</span><span class="o">=</span><span class="sh">"</span><span class="s">pt</span><span class="sh">"</span><span class="p">).</span><span class="nf">to</span><span class="p">(</span><span class="sh">"</span><span class="s">cuda</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="c1"># ⚡ 2배 속도 옵션 (LoRA 적용 모델인 경우에만 사용 가능)
+# FastLanguageModel.for_inference(model)  # PEFT 모델에서는 보통 생략 가능
+</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="nf">generate</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c1"># ✅ 결과 디코딩
+</span><span class="nf">print</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">.</span><span class="nf">batch_decode</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="bp">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p><img src="/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image%207.png" alt="image.png" /></p>
+
+<h1 id="6️⃣-test-evaluation">6️⃣ <strong>Test Evaluation</strong></h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="kn">from</span> <span class="n">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">classification_report</span><span class="p">,</span> <span class="n">confusion_matrix</span>
+<span class="kn">import</span> <span class="n">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="n">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="n">torch</span>
+<span class="kn">from</span> <span class="n">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="c1"># Alpaca prompt 템플릿
+</span><span class="n">alpaca_prompt</span> <span class="o">=</span> <span class="sh">"""</span><span class="s">Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.
+
+### Instruction:
+{}
+
+### Input:
+{}
+
+### Response:
+{}</span><span class="sh">"""</span>
+
+<span class="n">instruction</span> <span class="o">=</span> <span class="sh">"</span><span class="s">Classify the following medical transcription into the correct medical specialty.</span><span class="sh">"</span>
+
+<span class="c1"># 라벨 전처리 함수
+</span><span class="k">def</span> <span class="nf">normalize_label</span><span class="p">(</span><span class="n">label</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">label</span><span class="p">.</span><span class="nf">lower</span><span class="p">().</span><span class="nf">replace</span><span class="p">(</span><span class="sh">"</span><span class="s">-</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">/</span><span class="sh">"</span><span class="p">).</span><span class="nf">replace</span><span class="p">(</span><span class="sh">"</span><span class="s"> / </span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">/</span><span class="sh">"</span><span class="p">).</span><span class="nf">strip</span><span class="p">()</span>
+
+<span class="c1"># 입력 길이 제한용 토큰 수
+</span><span class="n">MAX_INPUT_TOKENS</span> <span class="o">=</span> <span class="mi">1800</span>
+
+<span class="c1"># Test dataset 로드
+</span><span class="n">test_dataset</span> <span class="o">=</span> <span class="nf">load_dataset</span><span class="p">(</span><span class="sh">"</span><span class="s">hpe-ai/medical-cases-classification-tutorial</span><span class="sh">"</span><span class="p">,</span> <span class="n">split</span><span class="o">=</span><span class="sh">"</span><span class="s">test</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="n">labels</span><span class="p">,</span> <span class="n">preds</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+<span class="c1"># 라벨 집합 확보 (정규화된 기준으로)
+</span><span class="n">all_classes</span> <span class="o">=</span> <span class="nf">sorted</span><span class="p">(</span><span class="nf">list</span><span class="p">({</span><span class="nf">normalize_label</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="sh">"</span><span class="s">medical_specialty</span><span class="sh">"</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">test_dataset</span><span class="p">}))</span>
+
+<span class="k">for</span> <span class="n">example</span> <span class="ow">in</span> <span class="nf">tqdm</span><span class="p">(</span><span class="n">test_dataset</span><span class="p">):</span>
+    <span class="n">transcription</span> <span class="o">=</span> <span class="n">example</span><span class="p">[</span><span class="sh">"</span><span class="s">transcription</span><span class="sh">"</span><span class="p">]</span>
+    <span class="n">true_label</span> <span class="o">=</span> <span class="nf">normalize_label</span><span class="p">(</span><span class="n">example</span><span class="p">[</span><span class="sh">"</span><span class="s">medical_specialty</span><span class="sh">"</span><span class="p">])</span>
+    <span class="n">labels</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">true_label</span><span class="p">)</span>
+
+    <span class="n">prompt</span> <span class="o">=</span> <span class="n">alpaca_prompt</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">instruction</span><span class="p">,</span> <span class="n">transcription</span><span class="p">,</span> <span class="sh">""</span><span class="p">)</span>
+
+    <span class="c1"># 토크나이징 + 길이 제한
+</span>    <span class="n">inputs</span> <span class="o">=</span> <span class="nf">tokenizer</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="sh">"</span><span class="s">pt</span><span class="sh">"</span><span class="p">,</span> <span class="n">truncation</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="n">MAX_INPUT_TOKENS</span><span class="p">).</span><span class="nf">to</span><span class="p">(</span><span class="sh">"</span><span class="s">cuda</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">torch</span><span class="p">.</span><span class="nf">no_grad</span><span class="p">():</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="nf">generate</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">output_text</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="c1"># "### Response:" 이후 예측값만 추출
+</span>    <span class="n">response</span> <span class="o">=</span> <span class="n">output_text</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sh">"</span><span class="s">### Response:</span><span class="sh">"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="nf">strip</span><span class="p">().</span><span class="nf">split</span><span class="p">(</span><span class="sh">"</span><span class="se">\n</span><span class="sh">"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="nf">normalize_label</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+    <span class="n">preds</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span>
+
+<span class="c1"># 정확도 및 리포트 출력
+</span><span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">✅ Accuracy:</span><span class="sh">"</span><span class="p">,</span> <span class="nf">accuracy_score</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">preds</span><span class="p">))</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="se">\n</span><span class="s">📄 Classification Report:</span><span class="sh">"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="nf">classification_report</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">preds</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">all_classes</span><span class="p">))</span>
+
+<span class="c1"># Confusion matrix
+</span><span class="n">cm</span> <span class="o">=</span> <span class="nf">confusion_matrix</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">preds</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">all_classes</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="p">.</span><span class="nf">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">14</span><span class="p">))</span>
+<span class="n">sns</span><span class="p">.</span><span class="nf">heatmap</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="n">all_classes</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="n">all_classes</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="sh">'</span><span class="s">d</span><span class="sh">'</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="sh">'</span><span class="s">Blues</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">title</span><span class="p">(</span><span class="sh">"</span><span class="s">Confusion Matrix</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">xlabel</span><span class="p">(</span><span class="sh">"</span><span class="s">Predicted Label</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">ylabel</span><span class="p">(</span><span class="sh">"</span><span class="s">True Label</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">yticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image%208.png" alt="image.png" /></p>
+
+<p><img src="/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image%209.png" alt="image.png" /></p>
+
+<h1 id="7️⃣-saving-loading-finetuned-models">7️⃣ <strong>Saving, loading finetuned models</strong></h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model</span><span class="p">.</span><span class="nf">save_pretrained</span><span class="p">(</span><span class="sh">"</span><span class="s">lora_model</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># Local saving
+</span><span class="n">tokenizer</span><span class="p">.</span><span class="nf">save_pretrained</span><span class="p">(</span><span class="sh">"</span><span class="s">lora_model</span><span class="sh">"</span><span class="p">)</span>
+<span class="c1"># model.push_to_hub("your_name/lora_model", token = "...") # Online saving
+# tokenizer.push_to_hub("your_name/lora_model", token = "...") # Online saving
+</span></code></pre></div></div>
+
+
+  </div></div>
+
+    </section>
+    <footer class="condensed">
+      <ul class="social about-footer condensed"><a href="https://github.com/ysm0909" target="_blank">
+          <li>
+            <i class="icon-github-circled"></i>
+          </li>
+        </a><a href="mailto:ysmm0909@naver.com" target="_blank">
+          <li>
+            <i class="icon-mail-alt"></i>
+          </li>
+        </a></ul><p class="about-footer condensed">&copy;
+        2025</p><div class="about-footer condensed">
+        <p>Dark Mode
+          <i class="icon-moon"></i>
+          <label class="switch">
+            <input type="checkbox" class="dark-mode-toggle">
+            <span class="slider round" onclick="toggleDarkMode()"></span>
+          </label>
+        </p>
+      </div>
+    </footer>
+  </main>
+  
+  <script type="text/javascript" src="/assets/js/darkmode.js"></script>
+  
+  <script src="/assets/js/simple-jekyll-search.min.js"></script>
+  <script src="/assets/js/search.js"></script>
+  
+</body>
+
+</html>

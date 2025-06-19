@@ -6,9 +6,14 @@
                 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
         <url>
             <loc>http://localhost:4000</loc>
-	    <lastmod>2025-06-10T11:23:12+09:00</lastmod>
+	    <lastmod>2025-06-19T13:55:49+09:00</lastmod>
             <priority>1.00</priority>
         </url><url>
+                <loc>http://localhost:4000/llama/2025/06/19/Llama-Fine-tuning-Test(Unsloth).html</loc>
+                <lastmod>2025-06-19T13:13:36+09:00</lastmod>
+                <changefreq>weekly</changefreq>
+                <priority>0.80</priority>
+            </url><url>
                 <loc>http://localhost:4000/llama/2025/06/10/LlamaTest-Docker.html</loc>
                 <lastmod>2025-06-10T11:13:36+09:00</lastmod>
                 <changefreq>weekly</changefreq>
