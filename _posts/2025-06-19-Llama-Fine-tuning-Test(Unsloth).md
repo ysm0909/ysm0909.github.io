@@ -384,5 +384,26 @@ tokenizer.save_pretrained("lora_model")
 # tokenizer.push_to_hub("your_name/lora_model", token = "...") # Online saving
 ```
 
+# 8️⃣ Comparison
+
+## 1. Train:Test = 7:3
+
+![image.png](/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image%2010.png)
+
+## 2. Train:Test = 7.5:2.5
+
+![image.png](/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image%2011.png)
+
+## 3. Train:Test = 8:2
+
+![image.png](/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image%2012.png)
+
+## 4. Train:Test = 8.5:1.5
+
+![image.png](/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image%2013.png)
+
+## 5. Train:Test = 9:1
+
+![image.png](/assets/image/2025-06-19-Llama-Fine-tuning-Test-Unsloth-Image/image%2014.png)
 
 [link]: https://github.com/unslothai/unsloth
